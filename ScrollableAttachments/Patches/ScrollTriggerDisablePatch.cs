@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace AttachmentScrolling.Patches;
 
+// 스크롤 켜진 드롭다운 위에서 휠을 굴리면, 뒤의 무기 미리보기가 같이 줌되지 않게 막는다
 public class ScrollTriggerDisablePatch : ModulePatch
 {
     protected override MethodBase GetTargetMethod()
@@ -16,6 +17,6 @@ public class ScrollTriggerDisablePatch : ModulePatch
     [PatchPrefix]
     private static bool PatchPrefix()
     {
-        return !AttachmentScrollComponent.Instance.HoveringDropdown;
+        return !AttachmentScrollComponent.HoveringDropdown;
     }
 }

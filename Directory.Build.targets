@@ -39,6 +39,17 @@
         <Message Text="Successfully copied client mod!" Importance="high"/>
     </Target>
     
+    <!-- Release 빌드 때 배포용 zip 자동 생성 (압축을 풀면 SPT 폴더 구조 그대로: BepInEx\plugins\...) -->
+    <Target Name="ZipClientRelease" AfterTargets="CopyClientFiles" Condition="$(IsClientMod)=='true' and $(Configuration)=='Release'">
+        <PropertyGroup>
+            <ZipOutDir>$(SolutionDir)Dist</ZipOutDir>
+            <ZipFile>$(ZipOutDir)\$(MSBuildProjectName)-SPT4.1-v$(Version).zip</ZipFile>
+        </PropertyGroup>
+        <MakeDir Directories="$(ZipOutDir)" />
+        <ZipDirectory SourceDirectory="$(ReleaseRoot)" DestinationFile="$(ZipFile)" Overwrite="true" />
+        <Message Text="Release zip created: $(ZipFile)" Importance="high"/>
+    </Target>
+
     <Target Name="CopyFikaSyncFiles" AfterTargets="Build" Condition="$(IsFikaMod)=='true'">
         <!-- copy fika sync files to spt -->
         <Message Text="Copying client mod to $(ClientModsDir)" Importance="high"/>

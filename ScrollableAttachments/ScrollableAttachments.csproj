@@ -3,48 +3,68 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <Product>AttachmentScrolling</Product>
-        <Version>1.1.0</Version>
+        <Version>1.2.0</Version>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>latest</LangVersion>
-        <RestoreAdditionalProjectSources>
-            https://api.nuget.org/v3/index.json;
-            https://nuget.bepinex.dev/v3/index.json;
-            https://nuget.samboy.dev/v3/index.json
-        </RestoreAdditionalProjectSources>
         <RootNamespace>AttachmentScrolling</RootNamespace>
         <PackageId>ScrollableAttachments</PackageId>
         <SPTModType>Client</SPTModType>
     </PropertyGroup>
 
+    <!--
+        4.1 포팅: BepInEx 전용 NuGet 피드(nuget.bepinex.dev)를 쓰던 BepInEx.Core /
+        BepInEx.PluginInfoProps / BepInEx.Analyzers 패키지는 뺐다. BepInEx.dll 과
+        0Harmony.dll 은 아래처럼 SPT 설치 폴더에서 직접 참조한다.
+    -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.Core" Version="5.*"/>
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*"/>
-        <PackageReference Include="UnityEngine.Modules" Version="2019.4.39" IncludeAssets="compile"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" IncludeAssets="compile" PrivateAssets="all"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
-        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
-    </ItemGroup>
+    <PropertyGroup>
+        <SptManaged>$(SPTPath)\EscapeFromTarkov_Data\Managed</SptManaged>
+        <SptCore>$(SPTPath)\BepInEx\core</SptCore>
+        <SptPlugins>$(SPTPath)\BepInEx\plugins\spt</SptPlugins>
+    </PropertyGroup>
 
     <ItemGroup>
       <Reference Include="0Harmony">
-        <HintPath>..\..\..\BepInEx\core\0Harmony.dll</HintPath>
-      </Reference>
-      <Reference Include="Assembly-CSharp">
-        <HintPath>..\..\..\EscapeFromTarkov_Data\Managed\Assembly-CSharp.dll</HintPath>
+        <HintPath>$(SptCore)\0Harmony.dll</HintPath>
+        <Private>false</Private>
       </Reference>
       <Reference Include="BepInEx">
-        <HintPath>..\..\..\BepInEx\core\BepInEx.dll</HintPath>
+        <HintPath>$(SptCore)\BepInEx.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+      <Reference Include="Assembly-CSharp">
+        <HintPath>$(SptManaged)\Assembly-CSharp.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+      <Reference Include="Comfort">
+        <HintPath>$(SptManaged)\Comfort.dll</HintPath>
+        <Private>false</Private>
       </Reference>
       <Reference Include="Sirenix.Serialization">
-        <HintPath>..\..\..\EscapeFromTarkov_Data\Managed\Sirenix.Serialization.dll</HintPath>
-      </Reference>
-      <Reference Include="spt-reflection">
-        <HintPath>..\..\..\BepInEx\plugins\spt\spt-reflection.dll</HintPath>
+        <HintPath>$(SptManaged)\Sirenix.Serialization.dll</HintPath>
+        <Private>false</Private>
       </Reference>
       <Reference Include="UnityEngine.UI">
-        <HintPath>..\..\..\EscapeFromTarkov_Data\Managed\UnityEngine.UI.dll</HintPath>
+        <HintPath>$(SptManaged)\UnityEngine.UI.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+      <Reference Include="spt-reflection">
+        <HintPath>$(SptPlugins)\spt-reflection.dll</HintPath>
+        <Private>false</Private>
       </Reference>
     </ItemGroup>
+
+    <!-- 깡통(1.0.0.0) spt-reflection.dll 에 대고 빌드하면 런처가 막는 DLL 이 나오므로 여기서 미리 차단 -->
+    <Target Name="EnsureRealSptReflection" BeforeTargets="BeforeBuild;ResolveAssemblyReferences">
+        <Error Condition="!Exists('$(SptPlugins)\spt-reflection.dll')"
+               Text="spt-reflection.dll not found under '$(SptPlugins)'. Set SPTPath (Directory.Build.props) to your SPT 4.1 install." />
+        <GetAssemblyIdentity AssemblyFiles="$(SptPlugins)\spt-reflection.dll">
+            <Output TaskParameter="Assemblies" ItemName="_SptReflectionIdentity" />
+        </GetAssemblyIdentity>
+        <Error Condition="'%(_SptReflectionIdentity.Version)' == '1.0.0.0'"
+               Text="spt-reflection.dll under '$(SptPlugins)' reports version 1.0.0.0 (placeholder). The launcher rejects plugins built against it. Point SPTPath at a real SPT installation." />
+    </Target>
 </Project>

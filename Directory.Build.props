@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <SPTPath>F:\SPT-DEV-400</SPTPath>
+        <!-- SPT 4.1 설치 경로. 다른 곳에 설치했다면 여기만 바꾸거나 /p:SPTPath=... 로 넘긴다 -->
+        <SPTPath Condition="'$(SPTPath)' == ''">E:\SPT 4.1</SPTPath>
         
         <ClientFolder>BepInEx\plugins\$(MSBuildProjectName)</ClientFolder>
-        <ServerFolder>SPT\user\mods\$(MSBuildProjectName)</ServerFolder>
+        <ServerFolder>SPT_Runtime\user\mods\$(MSBuildProjectName)</ServerFolder>
         
         <ClientModsDir>$(SPTPath)\$(ClientFolder)</ClientModsDir>
         <ServerModsDir>$(SPTPath)\$(ServerFolder)</ServerModsDir>

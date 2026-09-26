@@ -428,3 +428,5 @@ FodyWeavers.xsd
 *.msp
 
 .idea/
+# 배포용 zip 출력 폴더
+Dist/
