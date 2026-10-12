@@ -2,10 +2,10 @@
 
 ### ⚠️ IMPORTANT NOTICE / DISCLAIMER
 
-**Original Author:** peinwastaken (pein)
-**Original Repository:** SPTScrollableAttachments
-**Original Link:** https://github.com/peinwastaken/SPTScrollableAttachments
-**License:** No license file in the original repository (all rights reserved by the original author)
+- **Original Author:** peinwastaken (pein)
+- **Original Repository:** SPTScrollableAttachments
+- **Original Link:** https://github.com/peinwastaken/SPTScrollableAttachments
+- **License:** No license file in the original repository (all rights reserved by the original author)
 
 1. **Reflection & Take-Downs:** I deeply reflect on the ECOT incident. As an AI-assisted "vibe coder," I will immediately delete files if the original authors ask.
 2. **No Re-Distribution:** These ported builds are unverified, temporary fixes. Please do NOT re-upload or share them anywhere else.
@@ -17,6 +17,7 @@
 
 ## 변경 이력
 
+- 2026-10-13 04:38 — README 맨 위 원작자 표기를 한 줄씩 나눠 보기 쉽게 정리 (내용 변화 없음)
 - 2026-09-26 17:30 (KST) — v1.2.0: SPT 4.1 포팅 + 기능 추가
   - **더 좋은 부착물 노란 테두리 표시** 추가: 무기 개조 화면에서 부착물 목록(드롭다운)을 열면, 지금 그 슬롯에 달린 부착물보다 에르고/반동(선택: 정확도·무게)이 좋은 부착물 칸에 노란 테두리가 칠해집니다.
   - **F12 메뉴에서 기능별 켜기/끄기** 추가: "스크롤 기능 사용", "더 좋은 부착물 테두리 표시" 각각 따로 끌 수 있고, 게임 중에 바로 적용됩니다.
